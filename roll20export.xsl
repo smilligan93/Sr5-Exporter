@@ -3,7 +3,7 @@
  xmlns="http://www.w3.org/1999/xhtml" version="1.0">
   <xsl:output encoding="utf-8" method="html" />
 
-  <xsl:variable name="version">0.5.2 (RC-4)</xsl:variable>
+  <xsl:variable name="version">0.6.0</xsl:variable>
 
   <xsl:template match="/">
 
@@ -47,6 +47,7 @@
 	</div>
 	<div class="howitworks">
  	  <h3>How this works</h3>
+      <h4>Advanced Sheet</h4>
       <ul>
 	    <li>Click the "Copy Character to Clipboard" button below</li>
 	    <li>Go to Roll20 and load your character</li>
@@ -55,6 +56,17 @@
 	    <li>Click "Import" and "Accept"</li>
 	    <li>Enjoy (Hopefully)</li>
 	  </ul>
+      <h4>5th Edition Sheet (using Charactermancer)</h4>
+      <ul>
+	    <li>Click the "Copy Character to Clipboard" button below</li>
+	    <li>Go to Roll20 and load your character</li>
+        <li>Go to the "Character Sheet" tab and there to the cog/gear icon</li>
+	    <li>Click "Import" to open CharacterMancer import</li>
+        <li>Paste the contents of the CLipboard into the giant text field</li>
+	    <li>Click "Import" and review the changes</li>
+        <li>Accept the changes if it looks good</li>
+	    <li>Enjoy (Hopefully)</li>
+      </ul>
 	</div>
 	<div onclick="toggleDisplay('knownIssues');">
 	  <h3>Known Issues (Click to show them)</h3>
@@ -204,15 +216,26 @@
 
       <!-- Where did this come from? -->
 	  <h3>Found a bug?</h3>
-	  <p>Contact me on Reddit (<a href="https://www.reddit.com/user/QuatarSR/">/u/QuatarSR</a>), post in the <a href="https://www.reddit.com/r/Shadowrun/comments/5pjb6p/looking_for_beta_testers_for_herolab_to_roll20/">Reddit thread</a> or send me an <a href="mailto:khales.aoc@gmail.com">email</a></p>
-	  <p>Please include the error message you get. A copy of the Hero Lab .por file would also be nice so I can try to recreate it.</p>
- 	  <p>Reminder: I'm not the author of the Character Sheet itself. Any bugs with that, report to the author <a href="https://www.reddit.com/user/darkxyro">/u/darkxyro</a>. Thank you. </p>
- 	  <p>I'm also not affiliated with Hero Lab or Roll20 in any way, except that I'm a user of both</p>
+      <p>The sheet was written by (<a href="https://www.reddit.com/user/QuatarSR/">QuatarSR</a>) and has been adapted by (<a href="https://www.reddit.com/user/n3rf_herder/">n3rf_herder</a>).</p>
+	  <p>Contact n3rf_herder on Reddit of any issues.</p>
+	  <p>Please include the sheet you are using (Advanced or not advanced), the error message you get, a copy of the Hero Lab .por file.</p>
+ 	  <p>We are also not affiliated with Hero Lab or Roll20 in any way, except that we are users of both</p>
 
 	<div onclick="toggleDisplay('changelog');">
 	  <h3>Changelog (Click to show them)</h3>
 	</div>
 	<div id="changelog" class="changelog" style="display: none">
+      <h4>0.6.0</h4>
+      <ul>
+        <li>Updated to provide more available information on existing items.</li>
+        <li>Added fields are used by another Roll20 Sheet (Shadowrun5thEdition).</li>
+        <li>Bugfix: descriptions being put on different lines.</li>
+	    <li></li>
+	    <li></li>
+	    <li></li>
+	    <li></li>
+	    <li></li>
+      </ul>
 	  <h4>0.5.2</h4>
 	  <ul>
 	    <li>Bugfix: Mystic Armor broke the sheet. Fixed</li>
@@ -342,31 +365,49 @@
   },
   "characters": {
     "character": {
+      "limitastral": null,
+      "limitphysical": null,
+      "limitsocial": null,
+      "limitmental": null,
+      "composure": null,
+      "memory": null,
+      "judgeintentions": null,
+      "liftandcarry": null,
       "name": "<xsl:apply-templates select="@name" />",
+      "alias": "<xsl:apply-templates select="@name" />",
       "metatype": "<xsl:apply-templates select="race/@name" />",
       "sex": "<xsl:value-of select="personal/@gender" />",
       "age": "<xsl:value-of select="personal/@age" />",
       "height": "<xsl:value-of select="personal/charheight/@text" />",
       "weight": "<xsl:value-of select="personal/charweight/@text" />",
       "playername": "<xsl:value-of select="@playername" />",
-      "description": "<xsl:call-template name="description" />",
+      "description": "<xsl:call-template name="description" >
+                          <xsl:with-param name="text" select="personal/description" />
+                      </xsl:call-template>",
       "background": null,
       "notes": null,
       "gamenotes": null,
       "karma": "<xsl:value-of select="karma/@left" />",
       "totalkarma": "<xsl:value-of select="karma/@total" />",
       "init": "<xsl:value-of select="attributes/attribute[@name='Initiative']/@text" />", <!-- Not used but for now the best I can do -->
+      "initvalue": "<xsl:value-of select="attributes/attribute[@name='Initiative']/@modified" />",
       "initbonus": "<xsl:call-template name="init-bonus" />",
       "initdice": "<xsl:call-template name="initiative-dice" />", <!-- Sorry, can't seem to extract that yet -->
+      "armor": "<xsl:value-of select="armorratings/armorrating[@name='Armor']/@rating" />",
+      "indirectdefenseresist": "<xsl:value-of select="defenses/defense[@name='Ranged Defense']/@normal" />",
       "astralinitdice": "3",
       "cmthresholdoffset": null, <!-- high pain tolerance -->
       "cmthreshold": null, <!-- eg. low pain tolerance -->
       "cmoverflow": null, <!-- doesn't exist -->
-      "physicalcm": "<xsl:value-of select="conditionmonitors[@name='Physical Damage Track']/@boxes" />",
-      "stuncm": "<xsl:value-of select="conditionmonitors[@name='Stun Damage Track']/@boxes" />",
+      "physicalcm": "<xsl:value-of select="conditionmonitors/conditionmonitor[@name='Physical Damage Track']/@boxes" />",
+      "stuncm": "<xsl:value-of select="conditionmonitors/conditionmonitor[@name='Stun Damage Track']/@boxes" />",
       "totalstreetcred": "<xsl:value-of select="reputations/reputation[@name='Street Cred']/@value" />",
+      "calculatedstreetcred": "<xsl:value-of select="reputations/reputation[@name='Street Cred']/@value" />",
       "totalnotoriety":"<xsl:value-of select="reputations/reputation[@name='Notoriety']/@value" />",
+      "calculatednotoriety":"<xsl:value-of select="reputations/reputation[@name='Notoriety']/@value" />",
       "totalpublicawareness": "<xsl:value-of select="reputations/reputation[@name='Public Awareness']/@value" />",
+      "calculatedpublicawareness": "<xsl:value-of select="reputations/reputation[@name='Public Awareness']/@value" />",
+      "movement": "<xsl:apply-templates select='movementtypes' />",
       "nuyen": "<xsl:value-of select="cash/@total" />",
       "adept": <xsl:choose>
         <xsl:when test="heritage/@name = 'Adept'">"True"</xsl:when>
@@ -384,7 +425,12 @@
       "tradition": {
         "name": "<xsl:apply-templates select="magic/tradition/@name" />",
         "drain": "<xsl:value-of select="magic/tradition/@drain" />", <!-- Drainpool -->
-        "drainattribute": "WIL + <xsl:call-template name="determine-drain-attribute" />", <!-- Doesn't get provided, trying to guess -->
+        "drainattribute": {
+          "attr": [
+            "WIL",
+            "<xsl:call-template name="determine-drain-attribute" />" <!-- Doesn't get provided, trying to guess -->
+          ]
+        },
         "spiritcombat": "<xsl:value-of select="magic/@combatspirits" />",
         "spiritdetection": "<xsl:value-of select="magic/@detectspirits" />",
         "spirithealth": "<xsl:value-of select="magic/@healthspirits" />",
@@ -560,7 +606,10 @@
             "extra": null, <!-- already included in name -->
             "bp": "<xsl:value-of select="traitcost/@bp" />",
             "qualitytype": "<xsl:value-of select="$type" />",
-            "qualitytype_english": "<xsl:value-of select="$type" />"
+            "qualitytype_english": "<xsl:value-of select="$type" />",
+            "description": "<xsl:call-template name="description" >
+                                <xsl:with-param name="text" select="description" />
+                            </xsl:call-template>"
           }<xsl:if test="position() != last()">,</xsl:if>
     <xsl:if test="(position() = last()) and (last() > 1)">
         ]</xsl:if>
@@ -608,12 +657,18 @@
           {
             "name": "<xsl:apply-templates select="@name" />",
             "name_english": "<xsl:apply-templates select="@name" />",
-            "armor": "<xsl:apply-templates select="armorinfo/@rating" />",
+            <!-- Not removing "+" from armor rating to use with non-advanced sheet -->
+            <!--"armor": "<xsl:apply-templates select="armorinfo/@rating" />",-->
+            "armor": "<xsl:value-of select="armorinfo/@rating" />",
+            "category": "",
             "equipped": <xsl:choose>
                             <xsl:when test="armorinfo/@equipped = 'yes'">"True"</xsl:when>
                             <xsl:otherwise>"False"</xsl:otherwise>
                         </xsl:choose>,
-            "armormods": <xsl:call-template name="armormods" />
+            "armormods": <xsl:call-template name="armormods" />,
+            "description": "<xsl:call-template name="description" >
+                                <xsl:with-param name="text" select="description" />
+                            </xsl:call-template>"
           }<xsl:if test="position() != last()">,</xsl:if>
     <xsl:if test="(position() = last()) and (last() > 1)">
         ]</xsl:if>
@@ -645,7 +700,10 @@
                 {
                   "name": "<xsl:apply-templates select="@name" />",
                   "name_english": "<xsl:apply-templates select="@name" />",
-                  "rating": "<xsl:value-of select="@rating" />"
+                  "rating": "<xsl:value-of select="@rating" />",
+                  "description": "<xsl:call-template name="description" >
+                                      <xsl:with-param name="text" select="description" />
+                                  </xsl:call-template>"
                 }<xsl:if test="position() != last()">,</xsl:if>
     <xsl:if test="(position() = last()) and (last() > 1)">
               ]</xsl:if>
@@ -672,8 +730,15 @@
             "accuracy": "<xsl:call-template name="weapon_accuracy" />", 
             "dicepool": "<xsl:call-template name="weapon_dicepool" />",
             "damage_english": "<xsl:value-of select="weaponinfo/@damagetext" />",
+            "damage": "<xsl:value-of select="weaponinfo/@damagetext" />",
             "ap": "<xsl:value-of select="weaponinfo/@ap" />",
             "skill": "<xsl:call-template name="weapon_skill" />",
+            "description": "<xsl:call-template name="description" >
+                                <xsl:with-param name="text" select="description" />
+                            </xsl:call-template>",
+            "mode": "<xsl:value-of select="weaponinfo/@modestext" />",
+            "ranges": {<xsl:apply-templates select="weaponinfo/ranges" />
+            },
             "rc": "<xsl:call-template name="weapon_recoil" />"<!-- Comment, so I can have a linebreak
          --><xsl:call-template name="weaponmods" />
           }<xsl:if test="position() != last()">,</xsl:if>
@@ -689,11 +754,26 @@
             }</xsl:if>
   
   </xsl:template>
+
+  <xsl:template match="weaponinfo/ranges">
+      <xsl:variable name="minimum" select="range[@name='Minimum']/@value" />
+      <xsl:variable name="short" select="range[@name='Short']/@value" />
+      <xsl:variable name="medium" select="range[@name='Medium']/@value" />
+      <xsl:variable name="long" select="range[@name='Long']/@value" />
+      <xsl:variable name="extreme" select="range[@name='Extreme']/@value" />
+              "short": "<xsl:value-of select="$minimum" />-<xsl:value-of select="$short" />",
+              "medium": "<xsl:value-of select="$short + 1" />-<xsl:value-of select="$medium" />",
+              "long": "<xsl:value-of select="$medium + 1" />-<xsl:value-of select="$long" />",
+              "extreme": "<xsl:value-of select="$long + 1" />-<xsl:value-of select="$extreme" />"
+  </xsl:template>
   
   <xsl:template match="gear/weapons/item/modifications/item">
     <xsl:if test="(position() = 1) and (last() > 1)">[</xsl:if>
                 {
-                  "name": "<xsl:apply-templates select="@name" />"
+                  "name": "<xsl:apply-templates select="@name" />",
+                  "description": "<xsl:call-template name="description" >
+                                      <xsl:with-param name="text" select="description" />
+                                  </xsl:call-template>"
                 }<xsl:if test="position() != last()">,</xsl:if>
     <xsl:if test="(position() = last()) and (last() > 1)">
               ]</xsl:if>
@@ -806,28 +886,51 @@
   <xsl:choose>
     <xsl:when test="gear/equipment = ''">null</xsl:when>
     <xsl:otherwise>{
-        "gear": <xsl:apply-templates select="gear/equipment/item | gear/equipment/item/programs/item" />
+        "gear": <xsl:apply-templates select="gear/equipment/item | gear/equipment/item/programs/item | gear/augmentations/cyberware/item/programs/item | identities/identity/license" />
       }</xsl:otherwise></xsl:choose>
   </xsl:template>
    
+  <xsl:template match="identities/identity/license">
+    <xsl:if test="(position() = 1) and (last() > 1)">[</xsl:if>
+          {
+            "name": "<xsl:apply-templates select="@name" />",
+            "rating": "<xsl:value-of select="@rating" />",
+            "qty": "1",
+            "extra": "<xsl:value-of select="@for" />",
+            "category": "",
+            "description": "",
+            "category_english": null <!-- not given, maybe not important -->
+            }<xsl:if test="position() != last()">,</xsl:if>
+    <xsl:if test="(position() = last()) and (last() > 1)">
+        ]</xsl:if>
+  </xsl:template>
+
   <xsl:template match="gear/equipment/item">
     <xsl:if test="(position() = 1) and (last() > 1)">[</xsl:if>
           {
             "name": "<xsl:apply-templates select="@name" />",
+            "rating": "<xsl:value-of select="@rating" />",
             "qty": "<xsl:value-of select="@quantity" />",
-            "category_english": null <!-- not given, maybe not important -->
+            "category": "", <!--- not given -->
+            "category_english": "", <!-- not given, maybe not important -->
+            "description": "<xsl:call-template name="description" >
+                                <xsl:with-param name="text" select="description" />
+                            </xsl:call-template>"
           }<xsl:if test="position() != last()">,</xsl:if>
     <xsl:if test="(position() = last()) and (last() > 1)">
         ]</xsl:if>
   </xsl:template>
   
   <!-- Matrix Programs -->
-  <xsl:template match="gear/equipment/item/programs/item">
+  <xsl:template match="gear/equipment/item/programs/item | gear/augmentations/cyberware/item/programs/item">
     <xsl:if test="(position() = 1) and (last() > 1)">[</xsl:if>
           {
             "name": "<xsl:apply-templates select="@name" />",
             "qty": "<xsl:value-of select="@quantity" />",
             "isprogram": "True",
+            "description": "<xsl:call-template name="description" >
+                                <xsl:with-param name="text" select="description" />
+                            </xsl:call-template>",
             "category_english": "Hacking Programs" <!-- Doesn't matter if Common or Hacking, as long as it's either -->
           }<xsl:if test="position() != last()">,</xsl:if>
     <xsl:if test="(position() = last()) and (last() > 1)">
@@ -847,14 +950,19 @@
             "name": "<xsl:call-template name="skill-check-name" />",
             "skillcategory_english": "doesn't seem to matter",
             "rating": "<xsl:value-of select="@base" />",
+            "ratingmod": "<xsl:value-of select="@modified - @base" />",
             "total": "<xsl:value-of select="@dicepool" />",
             "knowledge": "False",
+            "islanguage": "False",
             "exotic": <xsl:choose>
                          <xsl:when test="contains(@name, 'Exotic')">"True",</xsl:when>
 						 <xsl:otherwise>"False",</xsl:otherwise>
 					  </xsl:choose>
             "attribute": "<xsl:call-template name="skill-attribute" />",
             "attributemod": "<xsl:value-of select="@dicepool - @base" />",
+            "description": "<xsl:call-template name="description" >
+                                <xsl:with-param name="text" select="description" />
+                            </xsl:call-template>",
             "skillspecializations": <xsl:call-template name="skill-specialization" />
           }<xsl:if test="position() != last()">,</xsl:if>
           <!-- If we're at the last active skill and none of them was Spellcasting, and the character is either a mage or a mystic adept, then... -->
@@ -869,6 +977,7 @@
             "exotic": "False",
             "attribute": "MAG",
             "attributemod": "0",
+            "description": "",
             "skillspecializations": null
           }<xsl:if test="position() != last()">,</xsl:if>
           </xsl:if>
@@ -973,11 +1082,16 @@
             "name": "<xsl:call-template name="skill-check-name" />",
             "skillcategory_english": "<xsl:call-template name="knowledge-skill-type" />",
             "rating": "<xsl:value-of select="@base" />",
+            "ratingmod": "<xsl:value-of select="@modified - @base" />",
             "total": "<xsl:value-of select="@dicepool" />",
+            "islanguage": "False",
             "knowledge": "True",
             "exotic": "False",
             "attribute": "<xsl:call-template name="knowledge-skill-attribute" />", <!-- Seems to get ignored anyway -->
             "attributemod": "<xsl:value-of select="@dicepool - @base" />",
+            "description": "<xsl:call-template name="description" >
+                                <xsl:with-param name="text" select="description" />
+                            </xsl:call-template>",
             "skillspecializations": <xsl:call-template name="skill-specialization" />
           }<xsl:if test="position() != last()">,</xsl:if>
   </xsl:template>
@@ -1008,12 +1122,17 @@
             "name": "<xsl:call-template name="skill-check-name" />",
             "skillcategory_english": "Language",
             "rating": "<xsl:call-template name="language-skill-rating" />",
+            "ratingmod": "<xsl:value-of select="@modified - @base" />",
             "total": "<xsl:call-template name="language-skill-total" />",
+            "islanguage": "True",
             "knowledge": "True",
             "exotic": "False",
             "attribute": "INT", <!-- Seems to get ignored anyway -->
             "attributemod": "<xsl:value-of select="@dicepool - @base" />",
-            "skillspecializations": <xsl:call-template name="skill-specialization" />
+            "skillspecializations": <xsl:call-template name="skill-specialization" />,
+            "description": "<xsl:call-template name="description" >
+                                <xsl:with-param name="text" select="description" />
+                            </xsl:call-template>"
           }<xsl:if test="position() != last()">,</xsl:if>
   </xsl:template>
 
@@ -1057,9 +1176,13 @@
             <xsl:with-param name="by" select="''" />
         </xsl:call-template>
     </xsl:variable>                
+    <xsl:variable name="specBonus">
+        <xsl:if test="contains($specNameWithoutQuotes, '+2')">+2</xsl:if>
+    </xsl:variable>
     <xsl:if test="(position() = 1) and (last() > 1)">[</xsl:if>
                 {
-                  "name": "<xsl:value-of select="$specNameWithoutPlusTwo" />"
+                  "name": "<xsl:value-of select="$specNameWithoutPlusTwo" />",
+                  "specbonus": "<xsl:value-of select="$specBonus" />"
                 }<xsl:if test="position() != last()">,</xsl:if>
     <xsl:if test="(position() = last()) and (last() > 1)">
               ]</xsl:if>
@@ -1110,7 +1233,10 @@
             "name": "<xsl:call-template name="ware-fix-name" />",
             "ess": "<xsl:value-of select="@essencecost" />",
             "rating": "<xsl:value-of select="@rating" />",
-            "grade": "<xsl:call-template name="ware-grade" />"
+            "grade": "<xsl:call-template name="ware-grade" />",
+            "description": "<xsl:call-template name="description" >
+                                <xsl:with-param name="text" select="description" />
+                            </xsl:call-template>"
           }<xsl:if test="position() != last()">,</xsl:if>
     <xsl:if test="(position() = last()) and (last() > 1)">
         ]</xsl:if>
@@ -1206,7 +1332,10 @@
             "duration": "<xsl:call-template name="spell-duration" />",
             "dv": "<xsl:value-of select="@draintext" />",
             "alchemy": "False", <!-- No way to figure this out,defaulting to Spell -->
-            "dicepool": "<xsl:value-of select="@casting" />"
+            "dicepool": "<xsl:value-of select="@casting" />",
+            "description": "<xsl:call-template name="description" >
+                                <xsl:with-param name="text" select="description" />
+                            </xsl:call-template>"
           }<xsl:if test="position() != last()">,</xsl:if>
     <xsl:if test="(position() = last()) and (last() > 1)">
         ]</xsl:if>
@@ -1223,8 +1352,11 @@
             "range": "<xsl:call-template name="spell-range" />", 
             "duration": "<xsl:call-template name="spell-duration" />",
             "dv": "<xsl:value-of select="@draintext" />",
-            "alchemy": "False", <!-- No way to figure this out,defaulting to Spell -->
-            "dicepool": "<xsl:value-of select="@casting" />"
+            "alchemy": <xsl:call-template name="determine-is-alchemy" />,
+            "dicepool": "<xsl:value-of select="@casting" />",
+            "description": "<xsl:call-template name="description" >
+                                <xsl:with-param name="text" select="description" />
+                            </xsl:call-template>"
           }<xsl:if test="position() != last()">,</xsl:if>
           <xsl:if test="last() = 1"> <!-- if there's only one spell, add a second dummy one -->
           ,{
@@ -1262,6 +1394,17 @@
     <xsl:value-of select="substring(@duration, 1, 1)" />
   </xsl:template>
 
+  <xsl:template name="determine-is-alchemy">
+    <xsl:variable name="dicepool" select="@casting" />
+    <xsl:variable name="spellcasting" select="/document/public/character/skills/active/skill[@name='Spellcasting']/@dicepool" />
+    <xsl:variable name="alchemy" select="/document/public/character/skills/active/skill[@name='Alchemy']/@dicepool" />
+    <xsl:choose>
+      <xsl:when test="$spellcasting=$dicepool">"False"</xsl:when>
+      <xsl:when test="$alchemy=$dicepool">"True"</xsl:when>
+      <xsl:otherwise>"False"</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <!-- Complex Forms -->  
   <!-- Unfortunately bugged. Setting to null -->  
   <xsl:template name="complexforms">
@@ -1287,8 +1430,12 @@
     <xsl:if test="(position() = 1) and (last() > 1)">[</xsl:if>
           {
             "name": "<xsl:apply-templates select="@name" />",
+            "fullname": "<xsl:apply-templates select="@text" />",
             "rating": "<xsl:value-of select="@rating" />",
-            "totalpoints": "<xsl:value-of select="traitcost/@powerpoints" />"
+            "totalpoints": "<xsl:value-of select="traitcost/@powerpoints" />",
+            "description": "<xsl:call-template name="description" >
+                                <xsl:with-param name="text" select="description" />
+                            </xsl:call-template>"
           }<xsl:if test="position() != last()">,</xsl:if>
     <xsl:if test="(position() = last()) and (last() > 1)">
         ]</xsl:if>
@@ -1342,28 +1489,29 @@
   <!-- Escape linebreaks and Quotes -->
   <!-- Actually only quotes for now, linebreaks done with Javascript -->
   <xsl:template name="description">
+    <xsl:param name="text" />
     <xsl:variable name="newtext">
       <xsl:call-template name="string-replace-all">
-          <xsl:with-param name="text" select="personal/description" />
+          <xsl:with-param name="text" select="." />
           <xsl:with-param name="replace" select="'&quot;'" />
           <xsl:with-param name="by" select="'\&quot;'" />
       </xsl:call-template>
     </xsl:variable>
-<!--    <xsl:variable name="newtext2">
+    <xsl:variable name="newtext2">
       <xsl:call-template name="string-replace-all">
           <xsl:with-param name="text" select="$newtext" />
-          <xsl:with-param name="replace" select="'&#10;'" /> < !- - /n - - >
-          <xsl:with-param name="by" select="'\n'" />
+          <xsl:with-param name="replace" select="'&#10;'" /> <!-- /n -->
+          <xsl:with-param name="by" select="' '" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="newtext3">
       <xsl:call-template name="string-replace-all">
           <xsl:with-param name="text" select="$newtext2" />
-          <xsl:with-param name="replace" select="'&#13;'" /> < !- - /r - - >
-          <xsl:with-param name="by" select="'\r'" />
+          <xsl:with-param name="replace" select="'&#13;'" /> <!-- /r -->
+          <xsl:with-param name="by" select="''" />
       </xsl:call-template>
-    </xsl:variable> -->
-	<xsl:value-of select="$newtext" /> <!-- change to newtext3 if ever active again -->
+    </xsl:variable>
+	<xsl:value-of select="$newtext3" /> <!-- change to newtext3 if ever active again -->
   </xsl:template>
 
   
