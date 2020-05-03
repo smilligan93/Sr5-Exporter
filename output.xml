@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <document signature="Lone Wolf Custom Output" product="Hero Lab">
 <output
-  folder="hl_to_roll20_output"
-  name="Roll20 Export"
-  summary="Export to Roll20 Character sheet"
-  description="Creates a JSON object to be used for the Import function of the Shadowrun 5th Edition Normal/Advanced Character Sheet on Roll20"
-  filename="roll20export.xsl"
+  folder="hl_to_chummer_json"
+  name="Chumer Json Export"
+  summary="Export to Chummer-Like Json output"
+  description="Creates a JSON object to be used for many of the Shadowrun 5th Edition VTT Importers that accept Chummer format"
+  filename="ChummerJsonExport.xsl"
   major="1" minor="3-1"
   images="none">
   </output>
